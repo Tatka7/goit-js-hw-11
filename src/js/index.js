@@ -18,6 +18,7 @@ const btnUp = document.querySelector('.btn-up');
 
 
 formEl.addEventListener('submit', submitInputData);
+btnUp.addEventListener('click', scrollToTop);
 loadMoreBtnEl.addEventListener('click', loadMoreData);
 
 function submitInputData(e) {
@@ -100,8 +101,6 @@ function simpleLightBoxOn() {
   });
   gallery.refresh('show.simplelightbox');
 }
-
-btnUp.addEventListener('click', scrollToTop);
 
 
 function scrollToTop() {
