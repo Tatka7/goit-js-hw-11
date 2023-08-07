@@ -43,7 +43,7 @@ input:hover {
 
 .sticky-form {
   position: fixed;
-  z-index: 999;
+  z-index: 99;
   left: 0px;
   width: 100%;
   text-align: center;
@@ -72,16 +72,20 @@ input:hover {
 }
 
 .btn-up {
+  position: relative;
+  bottom: 47px;
+  left: 220px;
+  z-index: 100;
   border-radius: 5px;
-    cursor: pointer;
-    border-color: rgb(0, 140, 255);
-    color: black;
-    background-color: aqua;
+  cursor: pointer;
+  border-color: rgb(0, 140, 255);
+  color: black;
+  background-color: aqua;
   
-    font-size: large;
-    outline: none;
-    box-shadow: 0 10px 10px -5px black;
-    cursor: pointer;
+  font-size: large;
+  outline: none;
+  box-shadow: 0 10px 10px -5px black;
+  cursor: pointer;
   }
 
 .button:hover {
