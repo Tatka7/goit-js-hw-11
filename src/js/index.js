@@ -80,12 +80,19 @@ function moreRenderingData(obj) {
   galleryEl.insertAdjacentHTML('beforeend', markUpData);
   const galleryLength = galleryEl.children.length;
   const totalHits = obj.data.totalHits;
+  const perPage = 40;
+  // Обчислюємо загальну кількість сторінок
+  const totalPages = Math.ceil(totalHits / perPage);
 
-  if (totalHits === 0 || galleryLength === totalHits) {
-    Report.info(`We're sorry &#129335;`, `But you've reached the end of search results.`, `Okay`);
+  if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
+    Report.info(`We're sorry &#129335;`,
+      `But you've reached the end of search results.`, `Okay`);
     hideBtn();
+  } else if (galleryLength < totalPages * perPage) {
+    showBtn();
   }
 }
+
 const hideBtn = () => {
   loadMoreBtnEl.classList.add('is-hidden');
 };
