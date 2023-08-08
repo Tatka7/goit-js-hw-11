@@ -43,6 +43,46 @@ function submitInputData(e) {
   formEl.reset();
 }
 
+ let isFirstPageLoaded = false; // Змінна, яка вказує на завантаження першої сторінки
+
+function moreRenderingData(obj) {
+  const markUpData = listMarkUp(obj);
+  galleryEl.insertAdjacentHTML('beforeend', markUpData);
+  const galleryLength = galleryEl.children.length;
+  const totalHits = obj.data.totalHits;
+  const perPage = 40;
+
+  // Перевіряємо, чи ця  сторінка перша та чи менше на ній карток, ніж на повній сторінці
+//   if (galleryLength < perPage && galleryLength < totalHits && obj.page === 1) {
+//     Report.success(`We found ${obj.data.totalHits} images.`, `But you've reached the end of search results.`, `Okay`);
+//     hideBtn();
+//   } else if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
+//     Report.info(`We're sorry &#129335;`, `But you've reached the end of search results.`, `Okay`);
+//     hideBtn();
+//   } else {
+//     showBtn();
+//   }
+// }
+  
+  // Обчислюємо загальну кількість сторінок
+  const totalPages = Math.ceil(totalHits / perPage);
+
+  if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
+    Report.info(`We're sorry &#129335;`,
+      `But you've reached the end of search results.`, `Okay`);
+    hideBtn();
+  } else if (galleryLength < totalPages * perPage && galleryLength % perPage === 0) {
+    showBtn();
+  }
+}
+
+const hideBtn = () => {
+  loadMoreBtnEl.classList.add('is-hidden');
+};
+const showBtn = () => {
+  loadMoreBtnEl.classList.remove('is-hidden');
+};
+
 
 function renderingData(obj) {
   if (obj.data.totalHits === 0) {
@@ -75,31 +115,6 @@ function loadMoreData() {
     });
 }
 
-function moreRenderingData(obj) {
-  const markUpData = listMarkUp(obj);
-  galleryEl.insertAdjacentHTML('beforeend', markUpData);
-  const galleryLength = galleryEl.children.length;
-  const totalHits = obj.data.totalHits;
-  const perPage = 40;
-  // Обчислюємо загальну кількість сторінок
-  const totalPages = Math.ceil(totalHits / perPage);
-
-  if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
-    Report.info(`We're sorry &#129335;`,
-      `But you've reached the end of search results.`, `Okay`);
-    hideBtn();
-  } else if (galleryLength < totalPages * perPage) {
-    showBtn();
-  }
-}
-
-const hideBtn = () => {
-  loadMoreBtnEl.classList.add('is-hidden');
-};
-
-const showBtn = () => {
-  loadMoreBtnEl.classList.remove('is-hidden');
-};
 
 function simpleLightBoxOn() {
   let gallery = new SimpleLightbox('.gallery a', {
@@ -119,4 +134,3 @@ function scrollToTop() {
         });
     }
 }
-
