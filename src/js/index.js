@@ -21,11 +21,12 @@ formEl.addEventListener('submit', submitInputData);
 btnUp.addEventListener('click', scrollToTop);
 loadMoreBtnEl.addEventListener('click', loadMoreData);
 
+
 function submitInputData(e) {
   e.preventDefault();
   const input = formEl[0].value.trim();
   const localValue = localStorage.getItem('search-word');
-
+ 
   if (!input) {
     Report.warning('Please &#128591;', 'Enter search request.', 'Okay');
     return;
@@ -34,6 +35,12 @@ function submitInputData(e) {
     fetchImages(input)
       .then(data => {
         renderingData(data);
+
+        if (data.data.hits.length < 40) {
+        hideBtn();
+      } else {
+        showBtn();
+      }        
         simpleLightBoxOn();
       })
       .catch(error => {
@@ -43,8 +50,6 @@ function submitInputData(e) {
   formEl.reset();
 }
 
- let isFirstPageLoaded = false; // Змінна, яка вказує на завантаження першої сторінки
-
 function moreRenderingData(obj) {
   const markUpData = listMarkUp(obj);
   galleryEl.insertAdjacentHTML('beforeend', markUpData);
@@ -52,26 +57,12 @@ function moreRenderingData(obj) {
   const totalHits = obj.data.totalHits;
   const perPage = 40;
 
-  // Перевіряємо, чи ця  сторінка перша та чи менше на ній карток, ніж на повній сторінці
-//   if (galleryLength < perPage && galleryLength < totalHits && obj.page === 1) {
-//     Report.success(`We found ${obj.data.totalHits} images.`, `But you've reached the end of search results.`, `Okay`);
-//     hideBtn();
-//   } else if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
-//     Report.info(`We're sorry &#129335;`, `But you've reached the end of search results.`, `Okay`);
-//     hideBtn();
-//   } else {
-//     showBtn();
-//   }
-// }
-  
-  // Обчислюємо загальну кількість сторінок
-  const totalPages = Math.ceil(totalHits / perPage);
-
-  if (totalHits === 0 || galleryLength === totalHits || galleryLength % perPage !== 0) {
-    Report.info(`We're sorry &#129335;`,
-      `But you've reached the end of search results.`, `Okay`);
+   if (galleryLength >= totalHits || galleryLength % perPage !== 0 || totalHits <= perPage) {
     hideBtn();
-  } else if (galleryLength < totalPages * perPage && galleryLength % perPage === 0) {
+    setTimeout(() => {
+      Report.info(`We're sorry &#129335;`, `But you've reached the end of search results.`, `Okay`);
+    }, 1000);
+  } else {
     showBtn();
   }
 }
@@ -82,7 +73,6 @@ const hideBtn = () => {
 const showBtn = () => {
   loadMoreBtnEl.classList.remove('is-hidden');
 };
-
 
 function renderingData(obj) {
   if (obj.data.totalHits === 0) {
@@ -115,7 +105,6 @@ function loadMoreData() {
     });
 }
 
-
 function simpleLightBoxOn() {
   let gallery = new SimpleLightbox('.gallery a', {
     scrollZoom: false,
@@ -123,7 +112,6 @@ function simpleLightBoxOn() {
   });
   gallery.refresh('show.simplelightbox');
 }
-
 
 function scrollToTop() {
     // Перевірка, чи є розмітка для скролу
